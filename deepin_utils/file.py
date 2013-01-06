@@ -40,40 +40,6 @@ def get_parent_dir(filepath, level=1):
 def get_current_dir(filepath):
     return os.path.dirname(os.path.realpath(filepath))
 
-def create_directory(directory, remove_first=False):
-    '''
-    Create directory.
-    
-    @param directory: Target directory to create.
-    @param remove_first: If you want remove directory when directory has exist, set it as True.
-    '''
-    if remove_first and os.path.exists(directory):
-        remove_directory(directory)
-    
-    if not os.path.exists(directory):
-        os.makedirs(directory)
-        
-def remove_directory(path):
-    """
-    Remove directory recursively, equivalent to command `rm -rf path`.
-
-    @param path: Target directory to remove.
-    """
-    if os.path.exists(path):
-        for i in os.listdir(path):
-            full_path = os.path.join(path, i)
-            if os.path.isdir(full_path):
-                remove_directory(full_path)
-            else:
-                os.remove(full_path)
-        os.rmdir(path)        
-
-def touch_file_dir(filepath):
-    # Create directory first.
-    dir = os.path.dirname(filepath)
-    if not os.path.exists(dir):
-        os.makedirs(dir)
-
 def write_file(filepath, content, mkdir=False):
     '''
     Write file with given content.
@@ -116,3 +82,38 @@ def remove_file(path):
     '''
     if os.path.exists(path):
         os.remove(path)
+
+def create_directory(directory, remove_first=False):
+    '''
+    Create directory.
+    
+    @param directory: Target directory to create.
+    @param remove_first: If you want remove directory when directory has exist, set it as True.
+    '''
+    if remove_first and os.path.exists(directory):
+        remove_directory(directory)
+    
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+        
+def remove_directory(path):
+    """
+    Remove directory recursively, equivalent to command `rm -rf path`.
+
+    @param path: Target directory to remove.
+    """
+    if os.path.exists(path):
+        for i in os.listdir(path):
+            full_path = os.path.join(path, i)
+            if os.path.isdir(full_path):
+                remove_directory(full_path)
+            else:
+                os.remove(full_path)
+        os.rmdir(path)        
+
+def touch_file_dir(filepath):
+    # Create directory first.
+    dir = os.path.dirname(filepath)
+    if not os.path.exists(dir):
+        os.makedirs(dir)
+
