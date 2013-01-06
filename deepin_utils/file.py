@@ -19,7 +19,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import math
 import os
+import sys
+import traceback
 
 def get_parent_dir(filepath, level=1):
     '''
@@ -117,3 +120,115 @@ def touch_file_dir(filepath):
     if not os.path.exists(dir):
         os.makedirs(dir)
 
+def touch_file(filepath):
+    '''
+    Touch file, equivalent to command `touch filepath`.
+    
+    If filepath's parent directory is not exist, this function will create parent directory first.
+
+    @param filepath: Target path to touch.
+    '''
+    # Create directory first.
+    touch_file_dir(filepath)
+        
+    # Touch file.
+    open(filepath, "w").close()
+
+def read_first_line(filepath, check_exists=False):
+    '''
+    Read first line of file.
+    
+    @param filepath: Target filepath.
+    @param check_exists: Whether check file is exist, default is False.
+    @return: Return \"\" if check_exists is True and filepath not exist.
+    
+    Otherwise return file's first line.
+    '''
+    if check_exists and not os.path.exists(filepath):
+        return ""
+    else:
+        r_file = open(filepath, "r")
+        content = r_file.readline().split("\n")[0]
+        r_file.close()
+        
+        return content
+
+def eval_file(filepath, check_exists=False):
+    '''
+    Eval file content.
+    
+    @param filepath: Target filepath.
+    @param check_exists: Whether check file is exist, default is False.
+    @return: Return None if check_exists is True and file not exist.
+    
+    Return None if occur error when eval file.
+
+    Otherwise return file content as python structure.
+    '''
+    if check_exists and not os.path.exists(filepath):
+        return None
+    else:
+        try:
+            read_file = open(filepath, "r")
+            content = eval(read_file.read())
+            read_file.close()
+            
+            return content
+        except Exception, e:
+            print "function eval_file got error: %s" % e
+            traceback.print_exc(file=sys.stdout)
+            
+            return None
+
+def get_dir_size(dirname):
+    '''
+    Get size of given directory.
+    
+    @param dirname: Directory path.
+    @return: Return total size of directory.
+    '''
+    total_size = 0
+    for root, dirs, files in os.walk(dirname):
+        for filepath in files:
+            total_size += os.path.getsize(os.path.join(root, filepath))
+            
+    return total_size
+
+def format_file_size(bytes, precision=2):
+    '''
+    Returns a humanized string for a given amount of bytes.
+    
+    @param bytes: Bytes number to format.
+    @param precision: Number precision.
+    @return: Return a humanized string for a given amount of bytes.
+    '''
+    bytes = int(bytes)
+    if bytes is 0:
+        return '0 B'
+    else:
+        log = math.floor(math.log(bytes, 1024))
+        quotient = 1024 ** log
+        size = bytes / quotient
+        remainder = bytes % quotient
+        if remainder < 10 ** (-precision): 
+            prec = 0
+        else:
+            prec = precision
+        return "%.*f %s" % (prec,
+                            size,
+                            ['B', 'KB', 'MB', 'GB', 'TB','PB', 'EB', 'ZB', 'YB']
+                            [int(log)])
+
+def end_with_suffixs(filepath, suffixs):
+    '''
+    Whether file endswith given suffixs.
+    
+    @param filepath: Filepath to test.
+    @param suffixs: A list suffix to match.
+    @return: Return True if filepath endswith with given suffixs.
+    '''
+    for suffix in suffixs:
+        if filepath.endswith(suffix):
+            return True
+        
+    return False    

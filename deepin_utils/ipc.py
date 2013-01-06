@@ -45,3 +45,11 @@ def auth_with_policykit(action,
     (ok, notused, details) = policykit.CheckAuthorization(subject, action, details, flags, cancel_id)
 
     return ok
+
+def is_dbus_name_exists(dbus_name, request_session_bus=True):
+    if request_session_bus:
+        bus = dbus.SessionBus()
+    else:
+        bus = dbus.SystemBus()
+    return bus.name_has_owner(dbus_name)
+
