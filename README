@@ -1,0 +1,11 @@
+Deepin Storm is download library and tool for Linux Deepin project.
+
+There's have many awesome download tool in Linux, but python binding is suck!
+
+I just need a neat multi-threads download library and easy to use, that's all!
+
+Depend:
+sudo aptitude install python-gevent
+
+gevent-1.0.x still have many bug, so newer version (deepin_storm_for_1.0.x) can't work, 
+I will test again when gevent-1.0 offical version release.

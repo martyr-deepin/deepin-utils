@@ -1,0 +1,9 @@
+*.pyc
+nohup.out
+.#*
+*.~
+build
+dist
+deepin_utils.egg-info
+*.po~
+*.swp
