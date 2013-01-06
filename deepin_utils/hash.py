@@ -20,6 +20,21 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from hashlib import md5
+import hashlib
+
+def check_hash(path, hash_type, hash_value):
+    '''Check hash value.'''
+    return get_hash(path, hash_type) == hash_value
+
+def get_hash(path, hash_type):
+    hash_fun = hashlib.new(hash_type)
+    with open(path) as f:
+        while 1:
+            bytes = f.read(4096)
+            if not bytes:
+                break
+            hash_fun.update(bytes)
+    return hash_fun.hexdigest()
 
 def md5_data(data):
     m = md5()   
@@ -28,10 +43,4 @@ def md5_data(data):
     return m.hexdigest() 
 
 def md5_file(name):
-    m = md5()
-    a_file = open(name, 'rb')
-    m.update(a_file.read())
-    a_file.close()
-    
-    return m.hexdigest()
-
+    return get_hash(name, "md5")
