@@ -77,6 +77,14 @@ def read_file(filepath, check_exists=False):
         
         return content
     
+def remove_path(path):
+    if os.path.isfile(path):
+        remove_file(path)
+    elif os.path.isdir(path):
+        remove_directory(path)
+    else:
+        print "%s is not directory or file" % path
+    
 def remove_file(path):
     '''
     Remove file if file exist.
