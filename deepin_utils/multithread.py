@@ -22,8 +22,8 @@
 
 import threading
 
-def create_thread(targets, args=None):
-    thread = threading.Thread(targets=targets, args=args)
+def create_thread(target, args=()):
+    thread = threading.Thread(target=target, args=args)
     thread.setDaemon(True)
 
     return thread
