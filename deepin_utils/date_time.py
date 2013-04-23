@@ -20,6 +20,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import time
+import traceback
+import sys
+from contextlib import contextmanager 
 
 def get_current_time(time_format="%Y-%m-%d %H:%M:%S"):
     '''
@@ -48,4 +51,24 @@ def print_exec_time(func):
         print "%s time: %s" % (str(func), time.time() - start_time)
         return ret
     return wrap
+
+@contextmanager
+def exec_time():
+    '''
+    Print execute time with given code block.
+    
+    Usage:
+
+    >>> with exec_time():
+    >>>     # Write any code at here.
+    >>>     # ...
+    '''
+    start_time = time.time()
+    try:  
+        yield  
+    except Exception, e:  
+        print 'function exec_time got error %s' % e  
+        traceback.print_exc(file=sys.stdout)
+    else:  
+        print "time: %f" % (time.time() - start_time)
 
