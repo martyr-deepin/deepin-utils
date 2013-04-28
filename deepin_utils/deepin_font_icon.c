@@ -8,6 +8,7 @@
 #include <gio/gio.h>
 #include <Python.h>
 #include <pycairo.h>
+#include "pygobject.h"
 
 /* define a variable for the C API */
 static Pycairo_CAPI_t *Pycairo_CAPI;
@@ -184,8 +185,17 @@ deepin_font_iconMethods[] = {
     {NULL, NULL},
 };
 
-void initdeepin_font_icon() {
-    Py_InitModule("deepin_font_icon", deepin_font_iconMethods);
+PyMODINIT_FUNC initdeepin_font_icon(void) {
+    PyObject *m;
+
+    /* This is necessary step for Python binding, otherwise got sefault error */
+    init_pygobject();
+     
+    m = Py_InitModule("deepin_font_icon", deepin_font_iconMethods);
     /* import pycairo - add to the init<module> function */
     Pycairo_IMPORT;
+
+    if (!m) {
+        return;
+    }
 }

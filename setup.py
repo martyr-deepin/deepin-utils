@@ -20,8 +20,8 @@ webkit_mod = Extension('dtk_webkit_cookie',
                 libraries = ['webkitgtk-1.0', 'soup-2.4', 'pthread', 'glib-2.0'],
                 sources = ['./deepin_utils/webkit_cookie.c'])
 deepin_font_icon_mod = Extension('deepin_font_icon',
-                include_dirs = pkg_config_cflags(['glib-2.0', 'cairo', 'pycairo']),
-                libraries = pkg_config_libs(['glib-2.0', 'cairo', 'pycairo']),
+                include_dirs = pkg_config_cflags(['gtk+-2.0', 'pycairo', "pygobject-2.0"]),
+                libraries = pkg_config_libs(['gtk+-2.0', 'pycairo', "pygobject-2.0"]),
                 sources = ['./deepin_utils/deepin_font_icon.c'])
 
 setup(name='deepin_utils',
