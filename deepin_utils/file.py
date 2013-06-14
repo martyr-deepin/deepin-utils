@@ -140,7 +140,10 @@ def touch_file(filepath):
     touch_file_dir(filepath)
         
     # Touch file.
-    open(filepath, "w").close()
+    if os.path.exists(filepath):
+        os.utime(filepath, None)
+    else:
+        open(filepath, 'w').close()
 
 def read_first_line(filepath, check_exists=False):
     '''
