@@ -25,19 +25,32 @@ import commands
 import traceback
 import sys
 
+def is_network_connected_by_nm():
+    import dbus
+    sys_bus = dbus.SystemBus()
+    proxy = sys_bus.get_object("org.freedesktop.NetworkManager","/org/freedesktop/NetworkManager")
+    interface = dbus.Interface(proxy, "org.freedesktop.NetworkManager")
+    return interface.state() == 70
+
 def is_network_connected():
     '''
+    First try using network-manager api, if not installed, then try arp  
     Is network connected, if nothing output from command `arp -n`, network is disconnected.
     
     @return: Return True if network is connected or command `arp -n` failed.
     '''
     try:
-        return len(commands.getoutput("arp -n").split("\n")) > 1
-    except Exception, e:
-        print "function is_network_connected got error: %s" % e
+        return is_network_connected_by_nm()
+    except:
+        print "get network state by dbus failed, then try arp"
         traceback.print_exc(file=sys.stdout)
-        
-        return True
+        try:
+            return len(commands.getoutput("arp -n").split("\n")) > 1
+        except Exception, e:
+            print "function is_network_connected got error: %s" % e
+            traceback.print_exc(file=sys.stdout)
+            
+            return True
 
 def get_unused_port(address="localhost"):
     s = socket.socket()
