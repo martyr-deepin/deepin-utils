@@ -24,12 +24,13 @@ import socket
 import commands
 import traceback
 import sys
+import dbus
 
 def is_network_connected_by_nm():
-    import dbus
     sys_bus = dbus.SystemBus()
     proxy = sys_bus.get_object("org.freedesktop.NetworkManager","/org/freedesktop/NetworkManager")
     interface = dbus.Interface(proxy, "org.freedesktop.NetworkManager")
+    
     return interface.state() == 70
 
 def is_network_connected():
