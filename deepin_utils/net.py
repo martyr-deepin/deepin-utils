@@ -33,20 +33,23 @@ def is_network_connected_by_nm():
     
     return interface.state() == 70
 
+def is_network_connected_by_route():
+    return len(commands.getoutput("route -nNvee").split("\n")) > 2
+
 def is_network_connected():
     '''
-    First try using network-manager api, if not installed, then try arp  
-    Is network connected, if nothing output from command `arp -n`, network is disconnected.
+    First try using network-manager api, if not installed, then try route.  
+    Is network connected, if nothing output from command `route -nNvee`, network is disconnected.
     
-    @return: Return True if network is connected or command `arp -n` failed.
+    @return: Return True if network is connected or command `route -nNvee` failed.
     '''
     try:
         return is_network_connected_by_nm()
     except:
-        print "get network state by dbus failed, then try arp"
+        print "get network state by dbus failed, then try route"
         traceback.print_exc(file=sys.stdout)
         try:
-            return len(commands.getoutput("arp -n").split("\n")) > 1
+            return is_network_connected_by_route()
         except Exception, e:
             print "function is_network_connected got error: %s" % e
             traceback.print_exc(file=sys.stdout)
