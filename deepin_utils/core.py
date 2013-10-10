@@ -19,6 +19,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import itertools    
+
 def unzip(unzip_list):
     '''
     Unzip [(1, 'a'), (2, 'b'), (3, 'c')] to ([1, 2, 3], ['a', 'b', 'c']).
@@ -216,3 +218,12 @@ def split_with(split_list, condition_func):
             rest_list.append(element)
             
     return (pass_list, rest_list)
+
+def merge_list(a):
+    '''
+    Merge recursively list with flat list.
+    
+    @return: Return a flat list after merge from recursively list.
+    '''
+    return list(itertools.chain.from_iterable(a))
+
