@@ -169,7 +169,7 @@ class Config(gobject.GObject):
         # Load default config if config file is not exists.
         if not os.path.exists(self.config_file):
             touch_file(self.config_file)
-            self.config.load_default()
+            self.load_default()
         try:  
             # So setting change operations.
             yield  
@@ -178,18 +178,12 @@ class Config(gobject.GObject):
             traceback.print_exc(file=sys.stdout)
         else:  
             # Save setting config last.
-            self.config.write()
+            self.write()
             
     def get_config(self, selection, option, default=None):
         try:
-            return self.config.config_parser.get(selection, option)
+            return self.get(selection, option, default)
         except:
-            try:
-                if default:
-                    return default
-                else:
-                    return dict(dict(self.default_config)[selection])[option]
-            except:
-                raise "This is a bug of get_config(%s, %s, %s)" % (selection, option, default)
-
+            return dict(dict(self.default_config)[selection])[option]
+        
 gobject.type_register(Config)

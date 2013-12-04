@@ -90,6 +90,12 @@ def mix_list_max(list_a, list_b):
         print "mix_list_max: two list's length not same."
         return []
 
+def is_true(string_value):
+    if isinstance(string_value, bool):
+        return string_value
+    else:
+        return string_value.lower() == "true"
+
 def is_seriate_list(test_list):
     '''
     Whether is seriate list.
