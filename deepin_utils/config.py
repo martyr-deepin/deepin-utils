@@ -22,7 +22,10 @@
 
 from ConfigParser import RawConfigParser as ConfigParser
 from collections import OrderedDict
+from contextlib import contextmanager 
+from file import touch_file
 import gobject    
+import os
 import sys
 import traceback
 
@@ -160,5 +163,33 @@ class Config(gobject.GObject):
             config_dict[section] = option_dict
         
         return config_dict    
-        
+    
+    @contextmanager
+    def save_config(self):
+        # Load default config if config file is not exists.
+        if not os.path.exists(self.config_file):
+            touch_file(self.config_file)
+            self.config.load_default()
+        try:  
+            # So setting change operations.
+            yield  
+        except Exception, e:  
+            print 'function save_config got error: %s' % e  
+            traceback.print_exc(file=sys.stdout)
+        else:  
+            # Save setting config last.
+            self.config.write()
+            
+    def get_config(self, selection, option, default=None):
+        try:
+            return self.config.config_parser.get(selection, option)
+        except:
+            try:
+                if default:
+                    return default
+                else:
+                    return dict(dict(self.default_config)[selection])[option]
+            except:
+                raise "This is a bug of get_config(%s, %s, %s)" % (selection, option, default)
+
 gobject.type_register(Config)
