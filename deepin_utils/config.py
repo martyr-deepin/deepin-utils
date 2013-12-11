@@ -86,7 +86,7 @@ class Config(gobject.GObject):
     def has_option(self, section, option):
         return self.config_parser.has_option(section, option)
     
-    def get(self, section, option, default=None):
+    def get(self, section, option, default=None, debug=False):
         ''' 
         Get specified the section for read the option value. 
         
@@ -98,12 +98,13 @@ class Config(gobject.GObject):
         try:
             return self.config_parser.get(section, option)
         except Exception, e:
-            print "function get got error: %s" % (e)
-            traceback.print_exc(file=sys.stdout)
+            if debug:
+                print "function get got error: %s" % (e)
+                traceback.print_exc(file=sys.stdout)
             
             return default
             
-    def set(self, section, option, value):  
+    def set(self, section, option, value, debug=False):  
         '''
         Set item given value.
 
@@ -112,7 +113,8 @@ class Config(gobject.GObject):
         @param value: Item value to save.
         '''
         if not self.config_parser.has_section(section):
-            print "Section \"%s\" not exist. create..." % (section)
+            if debug:
+                print "Section \"%s\" not exist. create..." % (section)
             self.add_section(section)
             
         self.config_parser.set(section, option, value)
@@ -165,7 +167,7 @@ class Config(gobject.GObject):
         return config_dict    
     
     @contextmanager
-    def save_config(self):
+    def save_config(self, debug=False):
         # Load default config if config file is not exists.
         if not os.path.exists(self.config_file):
             touch_file(self.config_file)
@@ -174,8 +176,9 @@ class Config(gobject.GObject):
             # So setting change operations.
             yield  
         except Exception, e:  
-            print 'function save_config got error: %s' % e  
-            traceback.print_exc(file=sys.stdout)
+            if debug:
+                print 'function save_config got error: %s' % e  
+                traceback.print_exc(file=sys.stdout)
         else:  
             # Save setting config last.
             self.write()
