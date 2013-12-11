@@ -94,7 +94,10 @@ def is_true(string_value):
     if isinstance(string_value, bool):
         return string_value
     else:
-        return string_value.lower() == "true"
+        try:
+            return string_value.lower() == "true"
+        except:
+            return False
 
 def is_seriate_list(test_list):
     '''
