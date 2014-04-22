@@ -21,8 +21,11 @@
 
 import pangocairo
 
-def get_font_families():
+def get_font_families(filter_monospace=False):
     '''Get all font families in system.'''
     fontmap = pangocairo.cairo_font_map_get_default()
-    return sorted(map(lambda f: f.get_name(), fontmap.list_families()))
+    font_families = map(lambda f: f.get_name(), fontmap.list_families())
+    if filter_monospace:
+        font_families = filter(lambda f: f.is_monospace(), font_families)
+    return sorted(font_families)
 
