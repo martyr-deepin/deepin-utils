@@ -21,11 +21,29 @@
 
 import pangocairo
 
-def get_font_families(filter_monospace=False):
+def font_name_just_contain_english(font_name):
+    for font_char in font_name.decode('utf-8'):
+        if not (
+                # Is is english char?
+                (font_char >= u'\u0041' and font_char <=u'\u005a') or (font_char >= u'\u0061' and font_char <=u'\u007a')
+                # Is is space char?
+                or font_char == ' '
+                # Is is number char?
+                or (font_char >= u'\u0030' and font_char <=u'\u0039')):
+            return False
+    return True
+
+def get_font_families(filter_terminal_font=False):
     '''Get all font families in system.'''
     fontmap = pangocairo.cairo_font_map_get_default()
-    font_families = map(lambda f: f.get_name(), fontmap.list_families())
-    if filter_monospace:
-        font_families = filter(lambda f: f.is_monospace(), font_families)
-    return sorted(font_families)
+    font_families = fontmap.list_families()
+    if filter_terminal_font:
+        font_families = filter(lambda f:
+                                f.is_monospace()
+                                # If font name not just contain english char, we should return it.
+                                or not font_name_just_contain_english(f.get_name()),
+                                filter(lambda f:
+                                       not f.get_name() in ["文泉驿微米黑", "Droid Sans Japanese", "MT Extra", "Monospace"],
+                                       font_families))
+    return sorted(map(lambda f: f.get_name(), font_families))
 
