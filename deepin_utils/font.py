@@ -39,11 +39,10 @@ def get_font_families(filter_terminal_font=False):
     font_families = fontmap.list_families()
     if filter_terminal_font:
         font_families = filter(lambda f:
-                                f.is_monospace()
-                                # If font name not just contain english char, we should return it.
-                                or not font_name_just_contain_english(f.get_name()),
-                                filter(lambda f:
-                                       not f.get_name() in ["文泉驿微米黑", "Droid Sans Japanese", "MT Extra", "Monospace"],
-                                       font_families))
+                               f.is_monospace()
+                               or f.get_name() == "文泉驿等宽微米黑",
+                               filter(lambda f:
+                                      not f.get_name() in ["Droid Sans Japanese", "MT Extra", "Monospace"],
+                                      font_families))
     return sorted(map(lambda f: f.get_name(), font_families))
 
