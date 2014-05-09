@@ -57,6 +57,7 @@ class Config(gobject.GObject):
         self.getint = self.config_parser.getint
         self.getfloat = self.config_parser.getfloat
         self.options = self.config_parser.options
+        self.items = self.config_parser.items
         self.config_file = config_file
         self.default_config = default_config
         
